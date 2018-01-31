@@ -1,0 +1,65 @@
+remote_theme: "mmistakes/minimal-mistakes"
+minimal_mistakes_skin    : "air"
+plugins:
+  - jekyll-remote-theme
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-feed
+  - jemoji
+
+# Site Settings
+locale                   : "en"
+title                    : "Innotec Labs"
+title_separator          : "-"
+name                     : &name "Innotec Labs"
+description              : &description "Innotec System - Labs and Research"
+url                      : "https://waawaa.github.io"
+baseurl                  : # the subpath of your site, e.g. "/blog"
+repository               : "waawaa/waawaa.github.io"
+teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
+search                   : true
+
+# Social Sharing
+twitter:
+  username: &twitter "InnotecLabs"
+  
+# Site Author  
+author:
+  name   : "Innotec System Labs"
+  avatar : "/assets/images/Innotec.jpg"
+  bio    : "My awesome biography constrained to a sentence or two goes here."
+  location: "Madrid, Spain"
+  email  : # optional
+  uri    : "http://labs.innotecsystem.com"
+  home   :
+  github : "InnotecSystem"
+  twitter: *twitter
+
+defaults:
+  # _posts
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: single
+      author_profile: true
+      read_time: false
+      comments: true
+      share: true
+      related: true
+      
+
+# Outputting
+permalink: /:categories/:title/
+paginate: 5 # amount of posts to show
+paginate_path: /page:num/
+timezone: Europe/Madrid # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
+
+# HTML Compression
+# - http://jch.penibelst.de/
+compress_html:
+  clippings: all
+  ignore:
+    envs: development
