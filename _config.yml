@@ -23,24 +23,24 @@ search                   : true
 
 gallery:
             - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-                 image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-                 alt: "Peticion Lineas"
-                 title: "Contador de caracteres por DNS"
+            - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
+            - alt: "Peticion Lineas"
+            - title: "Contador de caracteres por DNS"
             - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-                 image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-                 alt: "Respuesta Lineas"
-                 title: "Respuesta al XML que exfiltra dicha información"
+            - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
+            - alt: "Respuesta Lineas"
+            - title: "Respuesta al XML que exfiltra dicha información"
 
 
 gallery2:
         - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-          image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-          alt: "Peticion para exfiltrar datos"
-          title: "Contador de caracteres por DNS"
+        - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
+        - alt: "Peticion para exfiltrar datos"
+        - title: "Contador de caracteres por DNS"
         - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-          image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-          alt: "Respuesta exfiltracion de datos"
-          title: "Respuesta al XML que exfiltra dicha información"
+        - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
+        - alt: "Respuesta exfiltracion de datos"
+        - title: "Respuesta al XML que exfiltra dicha información"
                  
 # Social Sharing
 twitter:
