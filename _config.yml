@@ -22,23 +22,23 @@ search                   : true
 
 
 gallery:
-            - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-            - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
+            - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/certutil.png
+            - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/certutil.png
             - alt: "Peticion Lineas"
             - title: "Contador de caracteres por DNS"
-            - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-            - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
+            - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/certutil.png
+            - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/certutil.png
             - alt: "Respuesta Lineas"
             - title: "Respuesta al XML que exfiltra dicha información"
 
 
 gallery2:
-        - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-        - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
+        - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/certutil.png
+        - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/certutil.png
         - alt: "Peticion para exfiltrar datos"
         - title: "Contador de caracteres por DNS"
-        - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
-        - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/shell.png
+        - url: /assets/images/2018-01-30-weblogic-cve-2017-10271/certutil.png
+        - image_path: /assets/images/2018-01-30-weblogic-cve-2017-10271/certutil.png
         - alt: "Respuesta exfiltracion de datos"
         - title: "Respuesta al XML que exfiltra dicha información"
                  
