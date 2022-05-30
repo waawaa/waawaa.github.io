@@ -7,6 +7,7 @@ plugins:
   - jekyll-gist
   - jekyll-feed
   - jemoji
+  - jekyll-include-cache
 
 # Site Settings
 locale                   : "en"
