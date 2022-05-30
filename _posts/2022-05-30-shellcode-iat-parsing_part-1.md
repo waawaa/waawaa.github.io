@@ -111,7 +111,7 @@ To do that we use the following command <code  style="background-color: lightgre
 
 This command will open asm_parse_iat.exe before RtlUserThreadStart is started, so IAT of the image is still intact.
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2021_05_30-shellcode-part-1/windbg_start.png)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_05_30-shellcode-part-1/windbg_start.png)
 
 
 With this, let's proceed to look for the IAT manually using windbg.
