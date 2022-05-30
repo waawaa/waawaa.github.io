@@ -26,14 +26,9 @@ search                   : true
 # Site Author  
 author:
   name   : "Waawaa"
-    #  avatar : "/assets/images/Innotec.jpg"
   bio    : "Red Team and Researching in Innotec Security || Cycling lover"
   location: "Madrid, Spain"
   email  : # optional
-    # uri    : "http://labs.innotecsystem.co"
-    #home   :
-    # github : "InnotecSystem"
-    # twitter: *twitter
 
 defaults:
   # _posts
