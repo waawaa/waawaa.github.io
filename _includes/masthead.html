@@ -2,7 +2,7 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a style="margin:0; padding:0" href="{{ '/' | absolute_url }}"><img src="/assets/images/metalgarurumon.png" alt="InnoTec System Labs" itemprop="image"></a>
+        <a style="margin:0; padding:0" href="{{ '/' | absolute_url }}" class="site-title"><img src="/assets/images/metalgarurumon.png" alt="InnoTec System Labs" itemprop="image"></a>
         <ul class="visible-links">
           {% for link in site.data.navigation.main %}
             {% if link.url contains 'http' %}
