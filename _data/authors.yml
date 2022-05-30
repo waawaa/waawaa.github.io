@@ -1,16 +1,10 @@
 # /_data/authors.yml
 
-Amine Taouirsa:
-  name: "Amine Taouirsa"
+Alejandro Pinna:
+  name: "Alejandro Pinna"
   #uri: "http://labs.innotecsystem.com"
-  bio: "Lazy and efficient as a NOP"
-  avatar: "/assets/images/profiles/bio-amine-taouirsa.jpg"
-  twitter: "metalamin"
-  location: "Madrid, Spain"
+  bio: "Less is more"
+  avatar: "/assets/images/profiles/metalgarurumon.png"
+    #  twitter: "metalamin"
+    #location: "Madrid, Spain"
 
-Borja Martinez:
-  name: "Borja Martinez"
-  #email: "cornelius@thewhip.com"
-  bio: "(In)Security Maniac."
-  avatar: "/assets/images/profiles/bio-borja-martinez.jpg"
-  twitter: "Qm9yamFN"
