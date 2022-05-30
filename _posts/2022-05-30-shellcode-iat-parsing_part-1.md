@@ -70,7 +70,7 @@ First of all, must be explained that almost all the process running in a Windows
 
 During this post, we will be working with two structures that consist on the following.
 
-The first one is <br>_IMAGE_IMPORT_DESCRIPTOR</br> and holds information about the name of the DLL, a pointer to the IAT, and a pointer to the names of the functions imported.
+The first one is **_IMAGE_IMPORT_DESCRIPTOR** and holds information about the name of the DLL, a pointer to the IAT, and a pointer to the names of the functions imported.
 
 This is the definition
 
@@ -87,7 +87,7 @@ typedef struct _IMAGE_IMPORT_DESCRIPTOR {
  } IMAGE_IMPORT_DESCRIPTOR, *PIMAGE_IMPORT_DESCRIPTOR;
 ```
 
-And the second structure is the own IAT (<br>_IMAGE_IMPORT_BY_NAME</br>), that as we will see during this post is different when the PE image is loaded in memory and when we inspect it in the disk.
+And the second structure is the own IAT (**_IMAGE_IMPORT_BY_NAME**), that as we will see during this post is different when the PE image is loaded in memory and when we inspect it in the disk.
 
 In disk it has the following definition:
 
@@ -105,7 +105,7 @@ _IMAGE_IMPORT_BY_NAME is usually known as the IAT.
 All the work will be done with WinDBG, but for display ~~mental health~~ reasons, we will use also x32dbg to inspect memory in some ocasions.
 
 
-First of all, we load our program (<br>asm_iat_parse.exe</br>) in windbg but emulating a suspended process, the first of all we will se how to calculate the address of IAT, and we will use those steps to see that in a process that has not been fully initialized yet.
+First of all, we load our program (**asm_iat_parse.exe**) in windbg but emulating a suspended process, the first of all we will se how to calculate the address of IAT, and we will use those steps to see that in a process that has not been fully initialized yet.
 
 To do that we use the following command <code  style="background-color: lightgrey; color:black;"><b>windbg.exe -le:ntdll.dll asm_parse_iat.exe</b></code>
 
@@ -116,7 +116,7 @@ This command will open asm_parse_iat.exe before RtlUserThreadStart is started, s
 
 With this, let's proceed to look for the IAT manually using windbg.
 
-The first we will access the <br>_TEB</br> structure, for that we use the <br>fs:[0]</br> register.
+The first we will access the **_TEB** structure, for that we use the **fs:[0]** register.
 
 As we can see, _TEB has a pointer to _PEB in position 0x30
 
@@ -134,12 +134,12 @@ ntdll!_TEB
    +0x03c CsrClientThread  : Ptr32 Void
    +0x040 Win32ThreadInfo  : Ptr32 Void
 ```
-So we need to read the content of <br>fs:[0x30]</br> to access to ProcessEnvironmentBlock structure
+So we need to read the content of **fs:[0x30]** to access to ProcessEnvironmentBlock structure
 
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_05_30-shellcode-part-1/windbg_get_peb.png)
 
-After that, having the base address of the image, we will parse <br>_IMAGE_DOS_HEADER</br>
+After that, having the base address of the image, we will parse **_IMAGE_DOS_HEADER**
 But before going on, let's keep the address of the ImageBase in a temporary register of WinDBG 
 
 ```c
@@ -187,7 +187,7 @@ And we can also get the address of the IAT that in this case is the same for Ori
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_05_30-shellcode-part-1/windbg_get_function_names.png)
 
 
-Once the process is initialized this array will store the same data than now, but the FirstThunk, which is in <br>_IMAGE_IMPORT_DESCRIPTOR+0x10</br> will have the address of the functions imported, ordered in the same order than in _IMAGE_IMPORT_BY_NAME (<br>OriginalFirstThunk</br>)
+Once the process is initialized this array will store the same data than now, but the FirstThunk, which is in **_IMAGE_IMPORT_DESCRIPTOR+0x10** will have the address of the functions imported, ordered in the same order than in _IMAGE_IMPORT_BY_NAME (**OriginalFirstThunk**)
 
 We can see how those address are modified, but instead of using WinDBG, we will use x32dbg, and we will set a hardware breakpoint on write at FirstThunk addresses, so we can step by step observe how that array is overwritten with the real addresses of the functions.
 
@@ -197,7 +197,7 @@ The previous image shows how the iat points to the _IMAGE_IMPORT_BY_NAME array b
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_05_30-shellcode-part-1/iat_post_breakpoint.png)
 
-Finally, we see this address point to the <br>GetModuleFileName</br> function, that as we saw before, is the first one that is imported by the executable.
+Finally, we see this address point to the **GetModuleFileName** function, that as we saw before, is the first one that is imported by the executable.
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_05_30-shellcode-part-1/iat_post_breakpoint_resolved.png)
 
