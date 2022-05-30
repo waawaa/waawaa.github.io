@@ -10,10 +10,10 @@ plugins:
 
 # Site Settings
 locale                   : "en"
-title                    : "Innotec Labs"
+title                    : "Waawaa Blog"
 title_separator          : "-"
-name                     : &name "Innotec Labs"
-description              : &description "Innotec System - Labs and Research"
+name                     : &name "Waawaa"
+description              : &description "Labs & Research"
 url                      : "https://waawaa.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : "waawaa/waawaa.github.io"
@@ -22,20 +22,18 @@ search                   : true
 
 
 # Social Sharing
-twitter:
-  username: &twitter "InnotecLabs"
   
 # Site Author  
 author:
-  name   : "Innotec System Labs"
-  avatar : "/assets/images/Innotec.jpg"
-  bio    : "My awesome biography constrained to a sentence or two goes here."
+  name   : "Waawaa"
+    #  avatar : "/assets/images/Innotec.jpg"
+  bio    : "Red Team and Researching in Innotec Security || Cycling lover"
   location: "Madrid, Spain"
   email  : # optional
-  uri    : "http://labs.innotecsystem.com"
-  home   :
-  github : "InnotecSystem"
-  twitter: *twitter
+    # uri    : "http://labs.innotecsystem.co"
+    #home   :
+    # github : "InnotecSystem"
+    # twitter: *twitter
 
 defaults:
   # _posts
