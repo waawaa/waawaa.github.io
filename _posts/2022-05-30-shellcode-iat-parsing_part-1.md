@@ -217,7 +217,9 @@ Additionally, in comparison with resolving addresses using EAT, this method is m
 In the next part of this series we will see how to do that in C code and assembly level, and how to pop a calc using IAT resolving.
 
 
+PD: 
 
+The code will be published in https://github.com/waawaa/Exploiting-TIPS/
 
 
 
