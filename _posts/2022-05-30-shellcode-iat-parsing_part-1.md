@@ -216,6 +216,13 @@ Additionally, in comparison with resolving addresses using EAT, this method is m
 
 In the next part of this series we will see how to do that in C code and assembly level, and how to pop a calc using IAT resolving.
 
+References:
+- https://modexp.wordpress.com/2017/01/15/shellcode-resolving-api-addresses/
+- https://0xrick.github.io/win-internals/pe6/
+- https://dandylife.net/blog/archives/388
+- https://xen0vas.github.io/Win32-Reverse-Shell-Shellcode-part-2-Locate-the-Export-Directory-Table/
+- https://www.exploit-db.com/docs/english/18576-deep-dive-into-os-internals-with-windbg.pdf
+- https://docs.microsoft.com/en-us/archive/msdn-magazine/2002/march/inside-windows-an-in-depth-look-into-the-win32-portable-executable-file-format-part-2
 
 PD: 
 
