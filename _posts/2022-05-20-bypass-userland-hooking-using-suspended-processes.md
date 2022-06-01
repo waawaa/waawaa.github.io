@@ -14,9 +14,7 @@ tags:
 author: Alejandro Pinna
 ---
 
-¡Hi!
-
-First of all, those who want to read this post in spanish, this was originally published in Innotec Security blog:
+¡Hi! Before starting, those who want to read this post in spanish, this was originally published in Innotec Security blog:
 
 - [Innotec Security Blog](https://security-garage.com/index.php/es/investigaciones/userland-hooking-using-suspended-processes)
 
