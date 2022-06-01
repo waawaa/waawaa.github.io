@@ -136,6 +136,8 @@ Comparing that with a hooked syscall, we can see that when a process is suspende
 
 With this approach, the door is open to copy the memory of the NTDLL loaded in a suspended process, which is not yet hooked, and replace the **.text** section in a process we want to use to perform further actions in the system, being out of the radar of the EDR.
 
+## Head down and let's do it
+
 To do this, the following steps will be followed.
 
 1. A suspended process is created. It's important to differentiate between 32 and 64 bits process.
@@ -335,7 +337,7 @@ And after pressing F8 the previously hooked function is now cleaned.
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_05_20-bypass-userland-hooking/cleaned_function.png)
 
-#POC
+## POC
 
 As an example, we will see what happens when we try to inject code using **Early Bird Process Injection** without unhooking the NTDLL of the injector.
 
@@ -348,7 +350,7 @@ And after unhooking that NTDLL, we can inject arbitrary code.
 Poc is published in https://github.com/waawaa/unhook_from_memory/
 
 
-#Conclusion
+## Conclusion
 We see how some internal behaviors of windows allow an attacker to bypass security mechanisms used by EDRs / NGAV. 
 Usually when those mechanisms are implanted in userland, a non privileged user can defeat them, that is the underlying reason why a lot of EDR / NGAV software is working hard to implant security detection from the kernel and not the user-land.
 
