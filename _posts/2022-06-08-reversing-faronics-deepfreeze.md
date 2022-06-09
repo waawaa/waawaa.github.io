@@ -16,9 +16,7 @@ tags:
 author: Alejandro Pinna
 ---
 
-Hi to all!!
-
-Again back here.
+Hi to all! We are again back here.
 
 In this post we will cover how to reverse engineering Faronics - Deep Freeze (legacy) software to locate different vulnerabilities, and how to trigger this vulnerabilities to get a (till the moment) DoS in the DFServerService.
 
