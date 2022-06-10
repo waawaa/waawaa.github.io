@@ -47,16 +47,16 @@ add ebx, 0x10
 push ebx ; pushes for example buf
 ```
 
-Instead it uses always the eax register, and pushes it to another function that will move eax+8 to another function that also will get eax+8 and latter, with that, it will reference a relative offset from that modified eax register.
+Instead it uses always the eax register, and pushes it to another function that will move eax+8 to yet another function that also will get eax+8 and latter, with that, it will reference a relative offset from that modified eax register.
 
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_06_08-reversing-faronics/manage_structure.png)
 
-This function has been named **managestructure** in Ida Pro
+This has been named **managestructure** in Ida Pro
 
 With all this in mind let's deep dive the flow of the application, and check where will be the received buffer used again, to try to find possible vulnerable paths.
 
-Reviewing how buf parameter is passed to the recv function, we observe that initially the address of  **[ebp+8]** is being passed to the eax register, later this register is pushed in the stack as an argument for the function **manage_structure**, this function will return the direction of the buffer pointed by eax+0x10, after that, the value pointed by **eax+14** is added to ebx, that points to eax+0x10, and after that, the last **add ebx, 0x10** will point to the 4rd DWORD of the structure pointed by ebx, finally this value is pushed as the buffer where data will be received.
+Reviewing how buf parameter is passed to the recv function, we observe that initially the address of  **[ebp+8]** is being passed to the eax register, later this register is pushed in the stack as an argument for the function **manage_structure**, this will return the address of the buffer pointed by eax+0x10, later, the value pointed by **eax+14** is added to ebx, that points to eax+0x10, and finally, the last **add ebx, 0x10** will point to the 4rd DWORD of the structure pointed by ebx, finally this value is pushed as the buffer where data will be received.
 
  
 
@@ -92,7 +92,7 @@ Latter we set a bp in the second recv function to check if we are reaching it wi
 As we can see, this time we are receving data, this doesn't seem ASCII data, we will see why latter, also we see that in the first recv the client is sending the value 0xa37b0300, so let's continue with the execution of the the client to see where the second buffer is being used again.
 
 
-After setting a new hardware breakpoint after the recv function, we continue the execution, watching the execution is stopped by the hardware breakpoint in the following instruction.
+We use again a hardware breakpoint in the recv buffer, we continue the execution, watching the debugger is stopped in the following instruction.
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_06_08-reversing-faronics/cyphering_functions.png)
 
@@ -523,7 +523,7 @@ After this long long long post we saw the process to reverse engineer a comercia
 Other vulnerabilities exists, and some DoS vulnerabilities exist yet in the current version of the software.
 
 
-~~Spaghetti~~ Code is available in: <https://github.com/waawaa/Exploiting-TIPS/crash_faronics.py>
+~~Spaghetti~~ Code is available in: <https://github.com/waawaa/Exploiting-TIPS/blob/main/crash_faronics.py
 
 
 
