@@ -161,7 +161,7 @@ As wee can see the output of the xored_array_buffer is being compared with 0x0A9
 
 In the previous image can be seen how if we pass the check against 0x0A953 we can send an arbitrary value to the new function, including negative values, that would crash the application, to do that, we would need to send a packet with the following structure.
 
-```ditaa {cmd=true args=["-E"]}
+```
 +-------------------------+
 |        First recv       |
 +------------------------ +
@@ -454,21 +454,26 @@ We get the output of this function with WinDBG and update the packet we are send
 
 Our packet now looks like this
 
+
 ```
-1 | First recv |
-2 | ------ |
-3 | 0xa37b0300 |
-4 | Second recv |
-5 | ------ |
-6 |  AAAA  |
-7 | offset to first memcpy |
-8 | 0x0A953 |
-9 | Size to new - offset |
-10 | 0x0f2882a4 |
-11 | 0x0 |
-12 | 0x0a958 |
-13 | big chunk of As |
++-------------------------+
+|        First recv       |
++------------------------ +
+|        0xa37b0300       |
++-------------------------+ 
+|       Second recv       |
++-------------------------+
+|           AAAA          |
+|  offset to first memcpy |
+|          0x0A953        |
+|   Size to new - offset  |
+|        0x0f2882a4       |
+|            0x0          |
+|          0x0a958        |
+|     Big chunk of As     |
++-------------------------+
 ```
+
 
 Now we have passed all the checks done to the received buffer, and we can analyze where our code will go next.
 
@@ -494,22 +499,27 @@ This size value is not taken directly from a function that checks the size of ou
 
 
 ```
-1 | First recv |
-2 | ------ |
-3 | 0xa37b0300 |
-4 | Second recv |
-5 | ------ |
-6 |  AAAA  |
-7 | offset to first memcpy |
-8 | 0x0A953 |
-9 | Size to new - 0x10 |
-10 | 0x0f2882a4 |
-11 | 0x0 |
-12 | 0x0a958 |
-13 | 0x0c9 |
-14 | 0x00037ba3 - 0x10|
-15 | big chunk of As |
++-------------------------+
+|        First recv       |
++------------------------ +
+|        0xa37b0300       |
++-------------------------+ 
+|       Second recv       |
++-------------------------+
+|           AAAA          |
+|  offset to first memcpy |
+|          0x0A953        |
+|   Size to new - offset  |
+|        0x0f2882a4       |
+|            0x0          |
+|          0x0a958        |
+|          0x0c9          |
+|    0x00037ba3 - 0x10    |
+|     Big chunk of As     |
++-------------------------+
 ```
+
+
 
 If we follow the execution of this new function, we see that again size is compared against some values, and in case we send a size bigger than 0x0E74 we will trigger our vulnerability.
 
