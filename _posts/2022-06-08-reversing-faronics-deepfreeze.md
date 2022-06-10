@@ -161,7 +161,7 @@ As wee can see the output of the xored_array_buffer is being compared with 0x0A9
 
 In the previous image can be seen how if we pass the check against 0x0A953 we can send an arbitrary value to the new function, including negative values, that would crash the application, to do that, we would need to send a packet with the following structure.
 
-
+```{r, eval = FALSE}```{r, eval = FALSE}
 1 | First recv |
 2 | ------ |
 3 | 0xa37b0300 |
@@ -171,6 +171,7 @@ In the previous image can be seen how if we pass the check against 0x0A953 we ca
 7 | offset to first memcpy |
 8 | 0x0A953 |
 9 | Size to new - offset |
+```
 
 As we can see, if we force the packet to send a negative size and compense it with the offset, we will pass the **cmp     eax, [ebp+size]; jnz** check, and we will be able to force the new function to have a negative value.
 
@@ -329,6 +330,7 @@ After passing those checks we see a first call to a key_generator, this will rec
 
 This code will do the following arithmetic operations.
 
+```{r, eval = FALSE}
 1. mov to eax the pointer to the buffer
 2. mov to ecx the value  0x0B1
 3. edx = 0
@@ -344,6 +346,7 @@ This code will do the following arithmetic operations.
 13. move to the 16 bits register of EAX (ax) the value of var4 (ecx)
 14. eax = ax & 0x00007FFF
 15. return eax
+```
 
 This function will be called in a first step to initialize the value of EAX, and later it will be called in a foor loop to generate a dynamic xor key.
 
@@ -448,6 +451,7 @@ We get the output of this function with WinDBG and update the packet we are send
 
 Our packet now looks like this
 
+```{r, eval = FALSE}
 1 | First recv |
 2 | ------ |
 3 | 0xa37b0300 |
@@ -461,7 +465,7 @@ Our packet now looks like this
 11 | 0x0 |
 12 | 0x0a958 |
 13 | big chunk of As |
-
+```
 
 Now we have passed all the checks done to the received buffer, and we can analyze where our code will go next.
 
@@ -485,6 +489,8 @@ There we see a **cmp     ecx, 0CDh ;jg** instruction, in this case ecx will come
 
 This size value is not taken directly from a function that checks the size of our packet, instead, this size value is taken from a DWORD that we can send with our buffer. Finally our packet would be the following (and yes, this is the last)
 
+
+```{r, eval = FALSE}
 1 | First recv |
 2 | ------ |
 3 | 0xa37b0300 |
@@ -500,6 +506,7 @@ This size value is not taken directly from a function that checks the size of ou
 13 | 0x0c9 |
 14 | 0x00037ba3 - 0x10|
 15 | big chunk of As |
+```
 
 If we follow the execution of this new function, we see that again size is compared against some values, and in case we send a size bigger than 0x0E74 we will trigger our vulnerability.
 
@@ -516,7 +523,7 @@ After this long long long post we saw the process to reverse engineer a comercia
 Other vulnerabilities exists, and some DoS vulnerabilities exist yet in the current version of the software.
 
 
-
+~~Spaghetti~~ Code is available in: https://github.com/waawaa/crash_faronics.py
 
 
 
