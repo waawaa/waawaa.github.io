@@ -161,7 +161,7 @@ As wee can see the output of the xored_array_buffer is being compared with 0x0A9
 
 In the previous image can be seen how if we pass the check against 0x0A953 we can send an arbitrary value to the new function, including negative values, that would crash the application, to do that, we would need to send a packet with the following structure.
 
-```{r, eval = FALSE}```{r, eval = FALSE}
+```{r, eval = FALSE}
 1 | First recv |
 2 | ------ |
 3 | 0xa37b0300 |
