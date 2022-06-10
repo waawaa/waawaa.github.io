@@ -161,7 +161,7 @@ As wee can see the output of the xored_array_buffer is being compared with 0x0A9
 
 In the previous image can be seen how if we pass the check against 0x0A953 we can send an arbitrary value to the new function, including negative values, that would crash the application, to do that, we would need to send a packet with the following structure.
 
-```{r, eval = FALSE}
+```
 1 | First recv |
 2 | ------ |
 3 | 0xa37b0300 |
@@ -330,7 +330,7 @@ After passing those checks we see a first call to a key_generator, this will rec
 
 This code will do the following arithmetic operations.
 
-```{r, eval = FALSE}
+```
 1. mov to eax the pointer to the buffer
 2. mov to ecx the value  0x0B1
 3. edx = 0
@@ -451,7 +451,7 @@ We get the output of this function with WinDBG and update the packet we are send
 
 Our packet now looks like this
 
-```{r, eval = FALSE}
+```
 1 | First recv |
 2 | ------ |
 3 | 0xa37b0300 |
@@ -490,7 +490,7 @@ There we see a **cmp     ecx, 0CDh ;jg** instruction, in this case ecx will come
 This size value is not taken directly from a function that checks the size of our packet, instead, this size value is taken from a DWORD that we can send with our buffer. Finally our packet would be the following (and yes, this is the last)
 
 
-```{r, eval = FALSE}
+```
 1 | First recv |
 2 | ------ |
 3 | 0xa37b0300 |
