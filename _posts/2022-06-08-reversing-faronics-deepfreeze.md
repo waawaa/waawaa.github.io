@@ -1,5 +1,5 @@
 ---
-title: "[Exploiting] Reversing Faronics - Deep Freeze to locate DOS and Heap Overflows"
+title: "[Reversing] Reversing Faronics - Deep Freeze to locate DOS and Heap Overflows"
 header:
   teaser: "https://farm5.staticflickr.com/4076/4940499208_b79b77fb0a_z.jpg"
 categories: 
