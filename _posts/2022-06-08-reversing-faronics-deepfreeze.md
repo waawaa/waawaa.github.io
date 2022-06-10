@@ -523,7 +523,7 @@ After this long long long post we saw the process to reverse engineer a comercia
 Other vulnerabilities exists, and some DoS vulnerabilities exist yet in the current version of the software.
 
 
-~~Spaghetti~~ Code is available in: <https://github.com/waawaa/crash_faronics.py>
+~~Spaghetti~~ Code is available in: <https://github.com/waawaa/Exploiting-TIPS/crash_faronics.py>
 
 
 
