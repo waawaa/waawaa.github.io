@@ -161,16 +161,19 @@ As wee can see the output of the xored_array_buffer is being compared with 0x0A9
 
 In the previous image can be seen how if we pass the check against 0x0A953 we can send an arbitrary value to the new function, including negative values, that would crash the application, to do that, we would need to send a packet with the following structure.
 
-```
-1 | First recv |
-2 | ------ |
-3 | 0xa37b0300 |
-4 | Second recv |
-5 | ------ |
-6 |  AAAA  |
-7 | offset to first memcpy |
-8 | 0x0A953 |
-9 | Size to new - offset |
+```ditaa {cmd=true args=["-E"]}
++-------------------------+
+|        First recv       |
++------------------------ +
+|        0xa37b0300       |
++-------------------------+ 
+|       Second recv       |
++-------------------------+
+|           AAAA          |
+|  offset to first memcpy |
+|          0x0A953        |
+|   Size to new - offset  |
++-------------------------+
 ```
 
 As we can see, if we force the packet to send a negative size and compense it with the offset, we will pass the **cmp     eax, [ebp+size]; jnz** check, and we will be able to force the new function to have a negative value.
