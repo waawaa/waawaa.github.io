@@ -469,7 +469,7 @@ Our packet now looks like this
 
 Now we have passed all the checks done to the received buffer, and we can analyze where our code will go next.
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_06_08-reversing-faronics/c++_method.png)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_06_08-reversing-faronics/cpp_method.png)
 
 After returning from third_function, we see that if the return value is not zero, a new function will be called, in this case is a C++ method, so we will use WinDBG to see where it points really.
 
