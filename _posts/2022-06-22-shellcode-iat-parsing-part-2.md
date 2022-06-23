@@ -363,9 +363,11 @@ struct _LDR_DATA_TABLE_ENTRY
 ```
 
 We see again the first element is a linked list, and the first element of _LIST_ENTRY points to the next _LDR_DATA_TABLE_ENTRY.
-Watching this we see we must locate the first Flink of **_PEB_LDR_DATA->InMemoryOrderModuleList->Flink** and then we will be in the first _LDR_DATA_TABLE_ENTRY, where we will check if this is related with Kernel32.dll by checking the _UNICODE_STRING FullDllName, and if it's not, then we will go to the next _LDR_DATA_TABLE_ENTRY by following _LDR_DATA_TABLE_ENTRY->InLoadOrderLinks->Flink doing this process until we reach the _LDR_DATA_TABLE_ENTRY related with Kernel32.dll
+Watching this we see we must locate the first Flink of **_PEB_LDR_DATA->InMemoryOrderModuleList->Flink** and then we will be in the first **_LDR_DATA_TABLE_ENTRY**, where we will check if this is related with Kernel32.dll by checking the **_UNICODE_STRING FullDllName**.
+In case we are not in **Kernel32 _LDR_DATA_TABLE_ENTRY**  then we will go to the next **_LDR_DATA_TABLE_ENTRY** by following **_LDR_DATA_TABLE_ENTRY->InLoadOrderLinks->Flink**.
+We will be doing this process until we reach the **_LDR_DATA_TABLE_ENTRY** related with Kernel32.dll
 
-We developed a simple function that doest this process.
+We developed a simple function that does this process.
 
 ```c
 unsigned long get_kernel32_addr(PEB* pebAddress)
