@@ -430,12 +430,12 @@ In this case it's only an experiment, because using the resultant asm code (afte
 
 We will see in the next part of this series how to do this process using assembly instead of C code, and how in some cases it's easier, for example we will not have to cast data so that the compiler understands it well.
 
+Code is published in: <https://github.com/waawaa/Exploiting-TIPS/blob/main/%5BC%5D_Resolve_Address_from_IAT.c>
+
 References: 
 
 [1] - <https://0xrick.github.io/win-internals/pe6/#import-lookup-table-ilt>
-
-[2] - <https://dandylife.net/blog/archives/388>
-
+\newline[2] - <https://dandylife.net/blog/archives/388>
 
 
 
