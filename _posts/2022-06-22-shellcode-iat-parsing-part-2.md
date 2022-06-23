@@ -433,6 +433,7 @@ We will see in the next part of this series how to do this process using assembl
 References: 
 
 [1] - <https://0xrick.github.io/win-internals/pe6/#import-lookup-table-ilt>
+
 [2] - <https://dandylife.net/blog/archives/388>
 
 
