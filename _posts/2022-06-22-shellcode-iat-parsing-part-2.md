@@ -434,8 +434,8 @@ Code is published in: <https://github.com/waawaa/Exploiting-TIPS/blob/main/%5BC%
 
 References: 
 
-[1] - <https://0xrick.github.io/win-internals/pe6/#import-lookup-table-ilt>
-\newline[2] - <https://dandylife.net/blog/archives/388>
+[1] <https://0xrick.github.io/win-internals/pe6/#import-lookup-table-ilt>
+[2] <https://dandylife.net/blog/archives/388>
 
 
 
