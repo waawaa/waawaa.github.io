@@ -196,15 +196,15 @@ So if we want to locate a function imported from KERNEL32.DLL we must previously
 To accomplish that goal, we will loop on every ImportDescriptor, checking if name field is equal to KERNEL32.DLL and if it's not equal, we will go to the next ImportDescritor by adding the size of ImportDescriptor to the previous pointer.
 
 ```c
-	while (strcmp((char*)(pImportDescriptor->Name + (unsigned long long)imageBaseAddress), "KERNEL32.dll") != 0)
-	{
-		pImportDescriptor = (_IMAGE_IMPORT_DESCRIPTOR*)((long*)pImportDescriptor + (sizeof(_IMAGE_IMPORT_DESCRIPTOR)/sizeof(DWORD))); /*go to the next _IMAGE_IMPORT_DESCRIPTOR
+while (strcmp((char*)(pImportDescriptor->Name + (unsigned long long)imageBaseAddress), "KERNEL32.dll") != 0)
+{
+	pImportDescriptor = (_IMAGE_IMPORT_DESCRIPTOR*)((long*)pImportDescriptor + (sizeof(_IMAGE_IMPORT_DESCRIPTOR)/sizeof(DWORD))); /*go to the next _IMAGE_IMPORT_DESCRIPTOR
 
-		printf("Address is 0x%p\n", pImportDescriptor);
+	printf("Address is 0x%p\n", pImportDescriptor);
 
-		printf("Name is: %s\n", (char*)(pImportDescriptor->Name + (unsigned long long)imageBaseAddress));
+	printf("Name is: %s\n", (char*)(pImportDescriptor->Name + (unsigned long long)imageBaseAddress));
 
-	} 
+} 
 ```
 
 
