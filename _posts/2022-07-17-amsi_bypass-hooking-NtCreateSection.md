@@ -13,8 +13,10 @@ tags:
 author: Alejandro Pinna
 ---
 
-Hi to all! Here suffering (again) the high temperatures and hoping winter to come back again ;-).
+Hi everyone! Here suffering (again) the high temperatures and hoping winter to come back again.
+
 Today we will talk about an AMSI bypass technique (probably not too useful in engagements) but interesting anyway.
+
 A lot of AMSI bypass techniques have been published since Microsoft presented it for Windows 10 / Server 2016 but it's also interesting to see a new one.
 
 ## AMSI internals
@@ -271,6 +273,10 @@ Code is published here:
 
 <https://github.com/waawaa/AMSI_Rubeus_bypass>
 
+References:
+
+- <https://blog.fearcat.in/a?ID=01150-7d238944-4887-47e6-a6b0-b5949eb68c49>
+- <http://www.codeproject.com/KB/system/soviet_protector.aspx>
 
 
 
