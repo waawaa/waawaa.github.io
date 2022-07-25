@@ -23,11 +23,11 @@ When a new powershell / VBA / C# based process is created, the operating system 
 
 The execution flow can be observed graphically in the following screenshot.
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07-17_amsi/amsi_flow.png)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07_17_amsi/amsi_flow.png)
 
 It's interesting to note that a lot of EDRs use AMSI to detect scripts malicious activity, and subscribe to the ETW session provided by AMSI.
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07-17_amsi/edr_subscribed.png)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07_17_amsi/edr_subscribed.png)
 
 So it's not only about bypassing Windows Defender detections, but in some engagements we can find AMSI being used by EDR software.
 
@@ -173,11 +173,11 @@ NTSTATUS ntCreateMySection(OUT PHANDLE SectionHandle, IN ULONG DesiredAccess, IN
 
 Following we can see how whe NtCreateSection returns an error, the loader will return without loading the DLL.
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07-17_amsi/jump_if_error.png)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07_17_amsi/jump_if_error.png)
 
 In this case we may be careful, because if we return 0x0C000047E then, the function **_LdrAppxHandleIntegrityFailure** would be called, and this function would terminate our process (in no way my mind could think about using that value as return, but disclaimer is important...) 
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07-17_amsi/terminate_process.png)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07_17_amsi/terminate_process.png)
 
 For those cases when the hook function is not returning an AMSI dll, we must restore the previous NtCreateSection, which is done via the following snippet.
 
@@ -260,11 +260,11 @@ For example we can see here how we are using it to execute rubeus, and we pass t
 
 
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07-17_amsi/rubeus.png)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07_17_amsi/rubeus.png)
 
 And we see how amsi.dll is not loaded in the process.
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07-17_amsi/amsi_bypass_x64.png)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07_17_amsi/amsi_bypass_x64.png)
 
 
 Code is published here:
