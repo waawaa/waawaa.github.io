@@ -1,9 +1,7 @@
 main:
   - title: "Linkedin"
     url: https://linkedin.com/in/alejandro-pinna-toral-48b3161a6/
-  - title: "Sample Posts"
-    url: /year-archive/
-  - title: "Sample Collections"
-    url: /collection-archive/
-  - title: "Sitemap"
-    url: /sitemap/
+  - title: "Twitter"
+    url: https://twitter.com/frodosobon/
+  - title: "Github"
+    url: https://github.com/waawaa/
