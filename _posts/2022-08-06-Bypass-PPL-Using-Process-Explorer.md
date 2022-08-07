@@ -230,6 +230,10 @@ References:
 - <https://itm4n.github.io/the-end-of-ppldump/>
 - <https://repnz.github.io/posts/abusing-signed-drivers/>
 
+PS: The custom MiniDumpWriteDumpA implementation has some issues and sometimes fails, but i didn´t look forward the reason, it's just a POC, if anyone knows a good MiniDumpWriteDump implementation let me know and i include it in the project.
+
+
+
 
 
 
