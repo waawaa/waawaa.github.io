@@ -63,7 +63,7 @@ win32k!_PEB
    +0x003 IsProtectedProcessLight : 0y1
 ```
 
-But obviously, if it's a PP/PPL process, Process Explorer could read the PEB of the process, even running as an administrator, we can probe it with WINDBG as adminstrator and trying to attach to a PPL process (try this if you want).
+But obviously, if it's a PP/PPL process, Process Explorer couldn't read the PEB of the process, even running as an administrator, we can probe it with WINDBG as adminstrator and trying to attach to a PPL process (try this if you want).
 
 So, Process Explorer may be doing it in another way.
 
