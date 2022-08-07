@@ -91,8 +91,6 @@ The first that must be said, is that process comunicate with drivers using devic
 
 We can observe, how in Driver Entry, exists a call to IoCreateSymbolicLink, that is going to register the device object of **PROCEXP152.sys** usually, this devices have a callback that will process the input data we are sending to it.
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07_29_PPL/callback.png)
-
 This callback registration can be observed in the next assembly lines, where we see how a function pointer is being passed to the rax register using the following instructions:
 
 ```c
