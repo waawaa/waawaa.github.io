@@ -14,14 +14,14 @@ tags:
 author: Alejandro Pinna
 ---
 
-Hi everyone! After the receiving of the AMSI article, i decided to come with more info.
-Today we are going to talk a little bit about PPL processes and a possible bypass, that requires admin privileges, but not for that i less interesting.
-Also we will be talking about a technique implemented to detect LSASS access in kernel side, and how process explorer can be used also to bypass it.
+Hi everyone! After the receival of the AMSI article, i decided to come back with more.
+Today we are going to talk a little bit about PPL and a possible bypass, that requires admin privileges, but not for that less interesting.
+Also we will be talking about a technique implemented to detect LSASS access in kernel side, and how process explorer can be used to bypass it.
 
 
 ## PPL Processes
 
-Back in Windows Vista era microsoft introduced a protection for critical system processes called Protected Processes, later, in the Windows 8.1 era, Micro$oft introduced another protection, called Protected Process Light, this protection enables for example an antimalware service to protect it's own process, allowing itself to defend against termination.
+Back in Windows Vista era, Microsoft introduced a protection for critical system processes called Protected Process (a.k.a PP), later in the Windows 8.1 era, Micro$oft introduced a new protection, very similar to PP, called Protected Process Light (a.k.a PPL), this last permits for example an antimalware service to protect itself, blocking termination attempts usually done by malicius software.
 
 I won't go into details about PPL and PP, because there are fantastic posts talking about this, here is a must read:
 
@@ -32,7 +32,7 @@ Following there is a table with all the possible protections implemented with PP
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07_29_PPL/PPL.png)
 
-The protection applied to a process is specified in the _EPROCESS structure, which is an opaque structure residing in the kernel-side of the system.
+The protection applied to a process is specified in the _EPROCESS structure, which is an opaque kernel-side structure.
 
 During some years, the tool PPLDump could be used to bypass this protection, but in the last months, Microsoft patched the technique exploited by this vulnerability (discovered by Alex Ionescu and James Forshaw), and in up-to-date systems the era of PPLDump is over, if you want more details about that, you can go to the post i mentioned before (it's a must read).
 
@@ -45,7 +45,7 @@ When we open process explorer with admin privileges, we see it's showing us a li
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07_29_PPL/Process_Explorer_PPL.png)
 
-The first i thought when i saw this, was that process explorer was reading the protection from PEB, that has some properties indicating if a process is protected, and if is a PPL process.
+The first i thought when i saw this, was that process explorer was reading the protection from PEB, that has some properties indicating if a process is protected, and in case it is, if it's a PPL process.
 
 ```c
 0: kd> dt _PEB 0x00000097`9dade000
@@ -63,7 +63,9 @@ win32k!_PEB
    +0x003 IsProtectedProcessLight : 0y1
 ```
 
-But obviously, if it's a PP/PPL process, Process Explorer couldn't read the PEB of the process, even running as an administrator, we can probe it with WINDBG as adminstrator and trying to attach to a PPL process (try this if you want).
+But obviously, if it's a PP/PPL process, Process Explorer couldn't read the PEB of the process even running as an administrator, we can probe it with WINDBG as adminstrator and trying to attach to a PPL process.
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/2022_07_29_PPL/csrss_attach.png)
 
 So, Process Explorer may be doing it in another way.
 
@@ -78,7 +80,7 @@ fffff807`52740000 fffff807`5274c000   PROCEXP152   (no symbols)
 
 This driver must be doing black magic to send the Process Explorer GUI the information about PPL processes, and there is something else, Process Explorer can kill handles even from PPL processes, so this is being obviously done from the driver.
 
-References about killing EDRs with handles can be found in the following git repo, credits to Yaxser @Yas_o_h (i had the bad fortune to reverse engineer all the Process Explorer driver before finding that repo...)
+References about killing EDRs with handles can be found in the following git repo, credits to Yaxser @Yas_o_h (i had the bad fortune to reverse engineer the Process Explorer driver before finding that repo...)
 
 <https://github.com/Yaxser/Backstab/>
 
